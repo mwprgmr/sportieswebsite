@@ -4,6 +4,7 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 
 window.addEventListener("load", () => {
   document.body.classList.add("is-loaded");
+  window.setTimeout(() => document.body.classList.add("loader-done"), 650);
 });
 
 function updateScrollProgress() {
@@ -15,6 +16,23 @@ function updateScrollProgress() {
 window.addEventListener("scroll", updateScrollProgress, { passive: true });
 window.addEventListener("resize", updateScrollProgress);
 updateScrollProgress();
+
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener("click", (event) => {
+    const targetId = anchor.getAttribute("href");
+    if (!targetId || targetId === "#") return;
+    const target = document.querySelector(targetId);
+    if (!target) return;
+
+    event.preventDefault();
+    const headerOffset = 82;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({
+      top: Math.max(targetTop, 0),
+      behavior: "smooth"
+    });
+  });
+});
 
 navToggle?.addEventListener("click", () => {
   const isOpen = navLinks.classList.toggle("is-open");
@@ -142,7 +160,7 @@ document.querySelectorAll(".gallery-tabs button").forEach((button) => {
 });
 
 const revealTargets = [
-  ...document.querySelectorAll(".section-heading, .partner-strip, .intro-panel, .facility-card, .cafe-copy, .food-slider, .event-feature, .event-list article, .gallery-grid img, .person-card, .visitor-table-wrap, .testimonial-grid figure, .contact-card")
+  ...document.querySelectorAll(".section-heading, .partner-strip, .intro-panel, .facility-card, .cafe-copy, .food-slider, .event-feature, .event-list article, .adventure-video-frame, .gallery-grid img, .person-card, .testimonial-grid figure, .contact-card")
 ];
 
 revealTargets.forEach((element, index) => {
@@ -153,11 +171,11 @@ revealTargets.forEach((element, index) => {
     element.dataset.anim = "fade-left";
   }
 
-  if (element.matches(".event-list article, .visitor-table-wrap, .food-slider, .partner-strip")) {
+  if (element.matches(".event-list article, .food-slider, .partner-strip")) {
     element.dataset.anim = "fade-right";
   }
 
-  if (element.matches(".gallery-grid img")) {
+  if (element.matches(".gallery-grid img, .adventure-video-frame")) {
     element.dataset.anim = "zoom";
   }
 });
