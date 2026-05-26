@@ -62,7 +62,16 @@ function updateScrollProgress() {
   document.documentElement.style.setProperty("--scroll-progress", Math.min(progress, 1).toFixed(4));
 }
 
-window.addEventListener("scroll", updateScrollProgress, { passive: true });
+let scrollRaf = 0;
+function handleScrollProgress() {
+  if (scrollRaf) return;
+  scrollRaf = window.requestAnimationFrame(() => {
+    updateScrollProgress();
+    scrollRaf = 0;
+  });
+}
+
+window.addEventListener("scroll", handleScrollProgress, { passive: true });
 window.addEventListener("resize", updateScrollProgress);
 updateScrollProgress();
 

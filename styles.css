@@ -43,6 +43,11 @@ main {
   overflow-x: clip;
 }
 
+main > section {
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
+}
+
 body.is-loaded .site-header {
   animation: navDrop 700ms ease both;
 }
@@ -299,6 +304,7 @@ textarea {
   background-image: var(--bg);
   background-size: cover;
   background-position: center;
+  will-change: transform;
   content: "";
 }
 
@@ -307,6 +313,7 @@ textarea {
   inset: 0;
   z-index: -1;
   background: linear-gradient(90deg, rgba(6, 13, 10, 0.62), rgba(6, 13, 10, 0.28) 55%, rgba(6, 13, 10, 0.12));
+  will-change: transform, opacity;
   content: "";
 }
 
@@ -568,6 +575,7 @@ h3 {
   width: max-content;
   gap: clamp(28px, 5vw, 76px);
   animation: logoMarquee 30s linear infinite;
+  will-change: transform;
 }
 
 .partner-track span,
@@ -1277,6 +1285,7 @@ h3 {
   transform: translateY(28px);
   transition: opacity 720ms ease, transform 720ms ease;
   transition-delay: var(--delay, 0ms);
+  will-change: transform, opacity;
 }
 
 .reveal.is-visible {
@@ -1411,6 +1420,31 @@ h3 {
   .partner-track,
   .mobile-quick-enquiry {
     animation: none;
+  }
+
+  .reveal {
+    will-change: auto;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .hero-slide.is-active::before,
+  .hero-slide.is-active::after {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+
+  .hero-highlights span,
+  .mobile-quick-enquiry {
+    animation: none;
+  }
+
+  .facility-card:hover,
+  .person-card:hover,
+  .testimonial-grid figure:hover {
+    transform: none;
+    box-shadow: inherit;
   }
 }
 
