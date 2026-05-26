@@ -2,6 +2,29 @@ const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector(".nav-links");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const isSmallScreen = window.matchMedia("(max-width: 680px)");
+const loaderPercent = document.querySelector("#loaderPercent");
+const loaderStart = performance.now();
+let loaderValue = 0;
+let loaderGoal = 92;
+let loaderDone = false;
+
+function drawLoaderPercent() {
+  if (!loaderPercent) return;
+  loaderPercent.textContent = `${Math.round(loaderValue)}%`;
+}
+
+function tickLoaderPercent() {
+  if (loaderDone) return;
+  if (loaderValue < loaderGoal) {
+    const step = loaderValue < 45 ? 3.4 : loaderValue < 78 ? 2 : 0.9;
+    loaderValue = Math.min(loaderGoal, loaderValue + step);
+    drawLoaderPercent();
+  }
+  window.setTimeout(tickLoaderPercent, 70);
+}
+
+drawLoaderPercent();
+tickLoaderPercent();
 
 if ("scrollRestoration" in history) {
   history.scrollRestoration = "manual";
@@ -20,7 +43,17 @@ window.addEventListener("DOMContentLoaded", forceTopOnLoad);
 window.addEventListener("load", () => {
   forceTopOnLoad();
   document.body.classList.add("is-loaded");
-  window.setTimeout(() => document.body.classList.add("loader-done"), 900);
+  const elapsed = performance.now() - loaderStart;
+  const minVisible = 1400;
+  const delay = Math.max(120, minVisible - elapsed);
+
+  loaderGoal = 100;
+  window.setTimeout(() => {
+    loaderValue = 100;
+    drawLoaderPercent();
+    loaderDone = true;
+    document.body.classList.add("loader-done");
+  }, delay);
 });
 
 function updateScrollProgress() {
