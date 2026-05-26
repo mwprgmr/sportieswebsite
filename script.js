@@ -1,10 +1,26 @@
 const navToggle = document.querySelector(".nav-toggle");
 const navLinks = document.querySelector(".nav-links");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isSmallScreen = window.matchMedia("(max-width: 680px)");
+
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+function forceTopOnLoad() {
+  // Keep first paint at top, especially on mobile where browser scroll restore can jump.
+  if (!window.location.hash || isSmallScreen.matches) {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }
+}
+
+window.addEventListener("pageshow", forceTopOnLoad);
+window.addEventListener("DOMContentLoaded", forceTopOnLoad);
 
 window.addEventListener("load", () => {
+  forceTopOnLoad();
   document.body.classList.add("is-loaded");
-  window.setTimeout(() => document.body.classList.add("loader-done"), 650);
+  window.setTimeout(() => document.body.classList.add("loader-done"), 900);
 });
 
 function updateScrollProgress() {
